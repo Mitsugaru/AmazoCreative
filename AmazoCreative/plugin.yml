@@ -4,7 +4,7 @@ version: 0.01
 description: Block limiter for Amazocraft.net
 authors:
   - Mitsugaru
-depend: [Vault]
+depend: [Vault, WorldGuard]
 commands:
     ac:
         description: Root command for AmazoCreative

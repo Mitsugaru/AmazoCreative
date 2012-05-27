@@ -16,12 +16,14 @@ import com.nyverdenproduction.AmazoCreative.Item;
 
 public class ValuesConfig
 {
+	private AmazoCreative plugin;
 	private File file;
 	private YamlConfiguration config;
-	private Map<Item, ACInfo> items = new HashMap<Item, ACInfo>();
+	public Map<Item, ACInfo> items = new HashMap<Item, ACInfo>();
 
 	public ValuesConfig(AmazoCreative plugin)
 	{
+		this.plugin = plugin;
 		try
 		{
 			file = new File(plugin.getDataFolder().getAbsolutePath()
@@ -34,6 +36,10 @@ public class ValuesConfig
 			loadDefaults();
 			loadSettings();
 			loadItems();
+			if(items.isEmpty())
+			{
+				plugin.getLogger().warning(AmazoCreative.TAG + " No items specified to limit!");
+			}
 		}
 		catch (SecurityException s)
 		{
@@ -103,7 +109,7 @@ public class ValuesConfig
 	{
 
 	}
-	
+
 	private void loadItems()
 	{
 		// load items from config
@@ -115,10 +121,10 @@ public class ValuesConfig
 				int key = Integer.parseInt(entry);
 				if (key <= 0)
 				{
-					// plugin.getLogger().warning(
-					// Karmiconomy.TAG
-					// + " Zero or negative item id for entry: "
-					// + entry);
+					plugin.getLogger().warning(
+							AmazoCreative.TAG
+									+ " Zero or negative item id for entry: "
+									+ entry);
 				}
 				else
 				{
@@ -138,11 +144,11 @@ public class ValuesConfig
 						final int data = Integer.parseInt(split[1]);
 						if (item <= 0)
 						{
-							// plugin.getLogger()
-							// .warning(
-							// Karmiconomy.TAG
-							// + " Zero or negative item id for entry: "
-							// + entry);
+							plugin.getLogger()
+									.warning(
+											AmazoCreative.TAG
+													+ " Zero or negative item id for entry: "
+													+ entry);
 						}
 						else
 						{
@@ -163,33 +169,36 @@ public class ValuesConfig
 					}
 					catch (ArrayIndexOutOfBoundsException a)
 					{
-						// plugin.getLogger()
-						// .warning(
-						// "Wrong format for "
-						// + entry
-						// + ". Must follow '<itemid>&<datavalue>:' entry.");
+						plugin.getLogger()
+								.warning(
+										AmazoCreative.TAG
+												+ " Wrong format for "
+												+ entry
+												+ ". Must follow '<itemid>&<datavalue>:' entry.");
 					}
 					catch (NumberFormatException exa)
 					{
-						// plugin.getLogger().warning(
-						// "Non-integer number for " + entry);
+						plugin.getLogger().warning(
+								AmazoCreative.TAG + " Non-integer number for "
+										+ entry);
 					}
 				}
 				else
 				{
-					// plugin.getLogger().warning("Invalid entry for " + entry);
+					plugin.getLogger().warning(
+							AmazoCreative.TAG + " Invalid entry for " + entry);
 				}
 			}
 		}
 	}
-	
+
 	private ACInfo parseInfo(final String path)
 	{
 		return new ACInfo();
 	}
-	
+
 	private class ACInfo
 	{
-		
+
 	}
 }
