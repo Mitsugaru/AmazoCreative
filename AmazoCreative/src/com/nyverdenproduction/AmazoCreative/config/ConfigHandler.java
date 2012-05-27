@@ -29,4 +29,11 @@ public class ConfigHandler
 	{
 		return values;
 	}
+	
+	public void reload()
+	{
+		root.reloadConfig();
+		storage.reload();
+		values.reload();
+	}
 }

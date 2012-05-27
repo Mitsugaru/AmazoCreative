@@ -45,13 +45,15 @@ public class AmazoCreative extends JavaPlugin
 		}
 		//Initialize listener
 		getServer().getPluginManager().registerEvents(new ACBlockListener(this), this);
+		//Initialize command executor
+		getCommand("ac").setExecutor(new Commander(this));
 	}
 	
 	public WorldGuardPlugin getWorldGuard() {
 	    return wg;
 	}
 
-	public PermCheck getPermissionHandler()
+	public PermCheck getPermissionsHandler()
 	{
 		return perm;
 	}

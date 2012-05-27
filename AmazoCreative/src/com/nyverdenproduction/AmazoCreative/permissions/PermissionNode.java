@@ -2,7 +2,7 @@ package com.nyverdenproduction.AmazoCreative.permissions;
 
 public enum PermissionNode
 {
-	ADMIN(".admin"), IGNORE(".ignore");
+	ADMIN_RELOAD(".admin.reload"), ADMIN_RESET(".admin.reset"), IGNORE(".ignore");
 	private static final String prefix = "AmazoCreative";
 	private String node;
 

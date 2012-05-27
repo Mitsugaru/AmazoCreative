@@ -74,6 +74,12 @@ public class StorageConfig
 			ic.printStackTrace();
 		}
 	}
+	
+	public void resetPlayer(String name)
+	{
+		config.set(name, null);
+		save();
+	}
 
 	public int getPlayerLimit(String name, Item item)
 	{

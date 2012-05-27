@@ -13,10 +13,20 @@ permissions:
     AmazoCreative.*:
         description: Gives access to all AmazoCreative permission nodes
         children:
-            AmazoCreative.admin: true
+            AmazoCreative.admin.reload: true
+            AmazoCreative.admin.reset: true
             AmazoCreative.ignore: true
-    AmazoCreative.admin:
+    AmazoCreative.admin.*:
         description: Administrate the plugin
+        default: op
+        children:
+            AmazoCreative.admin.reload: true
+            AmazoCreative.admin.reset: true
+    AmazoCreative.admin.reload:
+        description: Reload plugin configuration
+        default: op
+    AmazoCreative.admin.reset:
+        description: Reset a player's current limit
         default: op
     AmazoCreative.ignore:
         description: Ignore limits.
