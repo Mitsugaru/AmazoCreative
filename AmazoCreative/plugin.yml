@@ -1,0 +1,23 @@
+name: AmazoCreative
+main: com.nyverdenproduction.AmazoCreative.AmazoCreative
+version: 0.01
+description: Block limiter for Amazocraft.net
+authors:
+  - Mitsugaru
+depend: [Vault]
+commands:
+    ac:
+        description: Root command for AmazoCreative
+        usage: /ac ? - Show help on AmazoCreative
+permissions:
+    AmazoCreative.*:
+        description: Gives access to all AmazoCreative permission nodes
+        children:
+            AmazoCreative.admin: true
+            AmazoCreative.ignore: true
+    AmazoCreative.admin:
+        description: Administrate the plugin
+        default: op
+    AmazoCreative.ignore:
+        description: Ignore limits.
+        default: op
