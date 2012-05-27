@@ -1,6 +1,6 @@
 name: AmazoCreative
 main: com.nyverdenproduction.AmazoCreative.AmazoCreative
-version: 0.01
+version: 0.02
 description: Block limiter for Amazocraft.net
 authors:
   - Mitsugaru
