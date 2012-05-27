@@ -194,11 +194,19 @@ public class ValuesConfig
 
 	private ACInfo parseInfo(final String path)
 	{
-		return new ACInfo();
+		final int limit = config.getInt(path + ".limit", plugin.getConfigHandler().getRootConfig().defaultLimit);
+		return new ACInfo(path, limit);
 	}
 
-	private class ACInfo
+	public class ACInfo
 	{
-
+		public String path;
+		public int limit;
+		
+		public ACInfo(String path, int limit)
+		{
+			this.path = path;
+			this.limit = limit;
+		}
 	}
 }

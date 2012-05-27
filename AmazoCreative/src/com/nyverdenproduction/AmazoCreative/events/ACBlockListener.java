@@ -1,5 +1,6 @@
 package com.nyverdenproduction.AmazoCreative.events;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -43,14 +44,30 @@ public class ACBlockListener implements Listener
 		ApplicableRegionSet regionSet = plugin.getWorldGuard()
 				.getRegionManager(player.getWorld())
 				.getApplicableRegions(player.getLocation());
-		plugin.getLogger().info("RegionSet size: " + regionSet.size());
+		//Check if they're in an existing region. If so, ignore.
+		if(regionSet.size() > 0)
+		{
+			return;
+		}
 		//Check if block is in config item list
 		if(!plugin.getConfigHandler().getValuesConfig().items.containsKey(item))
 		{
 			return;
 		}
-		//TODO Check the player's current limit for the block
-		//TODO deny if player is at / above limit
-		//TODO increment player value if event is not denied
+		//Check the player's current limit for the block
+		int limit = plugin.getConfigHandler().getStorageConfig().getPlayerLimit(player.getName(), item);
+		if(limit >= plugin.getConfigHandler().getValuesConfig().items.get(item).limit)
+		{
+			//deny if player is at / above limit
+			event.setCancelled(true);
+			//TODO send message to player
+			player.sendMessage(ChatColor.RED + AmazoCreative.TAG + " Hit limit for item!");
+		}
+		else
+		{
+			// increment player value if event is not denied
+			plugin.getConfigHandler().getStorageConfig().setPlayerLimit(player.getName(), item, ++limit);
+		}
+		
 	}
 }

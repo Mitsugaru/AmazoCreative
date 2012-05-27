@@ -14,6 +14,7 @@ public class RootConfig
 {
 	private AmazoCreative plugin;
 	public List<String> worlds;
+	public int defaultLimit;
 
 	public RootConfig(AmazoCreative plugin)
 	{
@@ -23,6 +24,7 @@ public class RootConfig
 		// Defaults
 		final Map<String, Object> defaults = new LinkedHashMap<String, Object>();
 		defaults.put("worlds", new ArrayList<String>());
+		defaults.put("defaults.limit", 5);
 		defaults.put("version", plugin.getDescription().getVersion());
 		// Insert defaults into config file if they're not present
 		for (final Entry<String, Object> e : defaults.entrySet())
@@ -53,6 +55,7 @@ public class RootConfig
 	private void loadSettings(ConfigurationSection config)
 	{
 		worlds = config.getStringList("worlds");
+		defaultLimit = config.getInt("defaults.limit", 5);
 	}
 	
 	private void boundsCheck()
@@ -61,6 +64,13 @@ public class RootConfig
 		{
 			worlds = new ArrayList<String>();
 			plugin.getLogger().warning(AmazoCreative.TAG + " World list is empty!");
+		}
+		if(defaultLimit < 0)
+		{
+			defaultLimit = 5;
+			plugin.getConfig().set("defaults.limit", 5);
+			plugin.saveConfig();
+			plugin.getLogger().warning(AmazoCreative.TAG + " Default limit was negative. Resetting to default!");
 		}
 	}
 }

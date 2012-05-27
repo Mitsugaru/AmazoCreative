@@ -3,22 +3,23 @@ package com.nyverdenproduction.AmazoCreative.config;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nyverdenproduction.AmazoCreative.AmazoCreative;
+import com.nyverdenproduction.AmazoCreative.Item;
+import com.nyverdenproduction.AmazoCreative.config.ValuesConfig.ACInfo;
 
 public class StorageConfig
 {
+	private AmazoCreative plugin;
 	private File file;
 	private YamlConfiguration config;
 
 	public StorageConfig(AmazoCreative plugin)
 	{
+		this.plugin = plugin;
 		try
 		{
 			file = new File(plugin.getDataFolder().getAbsolutePath()
@@ -28,8 +29,6 @@ public class StorageConfig
 				file.createNewFile();
 			}
 			config = YamlConfiguration.loadConfiguration(file);
-			loadDefaults();
-			loadSettings();
 		}
 		catch (SecurityException s)
 		{
@@ -74,28 +73,25 @@ public class StorageConfig
 		{
 			ic.printStackTrace();
 		}
-		loadDefaults();
-		loadSettings();
 	}
 
-	private void loadDefaults()
+	public int getPlayerLimit(String name, Item item)
 	{
-		// Defaults
-		final Map<String, Object> defaults = new LinkedHashMap<String, Object>();
-		// TODO defaults
-		// Insert defaults into config file if they're not present
-		for (final Entry<String, Object> e : defaults.entrySet())
-		{
-			if (!config.contains(e.getKey()))
-			{
-				config.set(e.getKey(), e.getValue());
-			}
-		}
+		// Get path
+		final ACInfo info = plugin.getConfigHandler().getValuesConfig().items
+				.get(item);
+		int limit = config.getInt(name + "." + info.path, 0);
+		return limit;
+	}
+
+	public void setPlayerLimit(String name, Item item, int limit)
+	{
+		// Get path
+		final ACInfo info = plugin.getConfigHandler().getValuesConfig().items
+				.get(item);
+		// Set limit
+		config.set(name + "." + info.path, limit);
+		// Save changes
 		save();
-	}
-
-	private void loadSettings()
-	{
-
 	}
 }
