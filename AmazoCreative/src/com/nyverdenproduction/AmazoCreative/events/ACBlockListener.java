@@ -52,7 +52,9 @@ public class ACBlockListener implements Listener
 		//Check if block is in config item list
 		if(!plugin.getConfigHandler().getValuesConfig().items.containsKey(item))
 		{
-			return;
+			//Deny
+			event.setCancelled(true);
+			player.sendMessage(ChatColor.RED + AmazoCreative.TAG + " Must build inside a region.");
 		}
 		//Check the player's current limit for the block
 		int limit = plugin.getConfigHandler().getStorageConfig().getPlayerLimit(player.getName(), item);
