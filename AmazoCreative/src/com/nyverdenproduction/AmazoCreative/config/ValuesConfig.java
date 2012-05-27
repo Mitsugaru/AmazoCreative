@@ -35,11 +35,7 @@ public class ValuesConfig
 			config = YamlConfiguration.loadConfiguration(file);
 			loadDefaults();
 			loadSettings();
-			loadItems();
-			if(items.isEmpty())
-			{
-				plugin.getLogger().warning(AmazoCreative.TAG + " No items specified to limit!");
-			}
+
 		}
 		catch (SecurityException s)
 		{
@@ -110,8 +106,9 @@ public class ValuesConfig
 
 	}
 
-	private void loadItems()
+	public void loadItems()
 	{
+		items.clear();
 		// load items from config
 		for (final String entry : config.getKeys(false))
 		{
@@ -190,11 +187,17 @@ public class ValuesConfig
 				}
 			}
 		}
+		if (items.isEmpty())
+		{
+			plugin.getLogger().warning(
+					AmazoCreative.TAG + " No items specified to limit!");
+		}
 	}
 
 	private ACInfo parseInfo(final String path)
 	{
-		final int limit = config.getInt(path + ".limit", plugin.getConfigHandler().getRootConfig().defaultLimit);
+		final int limit = config.getInt(path + ".limit", plugin
+				.getConfigHandler().getRootConfig().defaultLimit);
 		return new ACInfo(path, limit);
 	}
 
@@ -202,7 +205,7 @@ public class ValuesConfig
 	{
 		public String path;
 		public int limit;
-		
+
 		public ACInfo(String path, int limit)
 		{
 			this.path = path;

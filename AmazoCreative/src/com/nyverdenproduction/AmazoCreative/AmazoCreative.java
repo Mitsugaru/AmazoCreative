@@ -21,6 +21,8 @@ public class AmazoCreative extends JavaPlugin
 		perm = new PermCheck(this);
 		//Initialize config handler
 		configHandler = new ConfigHandler(this);
+		//Load items from values config
+		configHandler.getValuesConfig().loadItems();
 		//Grab WorldGuard
 		try
 		{
