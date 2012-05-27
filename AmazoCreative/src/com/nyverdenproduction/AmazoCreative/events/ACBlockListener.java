@@ -23,12 +23,14 @@ public class ACBlockListener implements Listener
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPlace(final BlockPlaceEvent event)
 	{
-		if (event.isCancelled() || event.getPlayer() == null || event.getBlockPlaced() == null)
+		if (event.isCancelled() || event.getPlayer() == null
+				|| event.getBlockPlaced() == null)
 		{
 			return;
 		}
 		final Player player = event.getPlayer();
-		final Item item = new Item(event.getBlock().getTypeId(), event.getBlock().getData(), (short) 0);
+		final Item item = new Item(event.getBlock().getTypeId(), event
+				.getBlock().getData(), (short) 0);
 		// check if in applicable world
 		if (!plugin.getConfigHandler().getRootConfig().worlds.contains(player
 				.getWorld().getName()))
@@ -37,39 +39,46 @@ public class ACBlockListener implements Listener
 		}
 		/**
 		 * Thanks to rmb938 for the following example on dealing with wg regions
-		 * http
-		 * ://forums.bukkit.org/threads/check-if-player-is-in-worldguard-region
-		 * -error.73598/
+		 * http ://forums.bukkit.org/threads/check-if-player-is-in-worldguard-
+		 * region -error.73598/
 		 */
 		ApplicableRegionSet regionSet = plugin.getWorldGuard()
 				.getRegionManager(player.getWorld())
 				.getApplicableRegions(player.getLocation());
-		//Check if they're in an existing region. If so, ignore.
-		if(regionSet.size() > 0)
+		// Check if they're in an existing region. If so, ignore.
+		if (regionSet.size() > 0)
 		{
 			return;
 		}
-		//Check if block is in config item list
-		if(!plugin.getConfigHandler().getValuesConfig().items.containsKey(item))
+		// Check if block is in config item list
+		if (!plugin.getConfigHandler().getValuesConfig().items
+				.containsKey(item))
 		{
-			//Deny
+			// Deny
 			event.setCancelled(true);
-			player.sendMessage(ChatColor.RED + AmazoCreative.TAG + " Must build inside a region.");
-		}
-		//Check the player's current limit for the block
-		int limit = plugin.getConfigHandler().getStorageConfig().getPlayerLimit(player.getName(), item);
-		if(limit >= plugin.getConfigHandler().getValuesConfig().items.get(item).limit)
-		{
-			//deny if player is at / above limit
-			event.setCancelled(true);
-			//TODO send message to player
-			player.sendMessage(ChatColor.RED + AmazoCreative.TAG + " Hit limit for item!");
+			player.sendMessage(ChatColor.RED + AmazoCreative.TAG
+					+ " Must build inside a region.");
 		}
 		else
 		{
-			// increment player value if event is not denied
-			plugin.getConfigHandler().getStorageConfig().setPlayerLimit(player.getName(), item, ++limit);
+			// Check the player's current limit for the block
+			int limit = plugin.getConfigHandler().getStorageConfig()
+					.getPlayerLimit(player.getName(), item);
+			if (limit >= plugin.getConfigHandler().getValuesConfig().items
+					.get(item).limit)
+			{
+				// deny if player is at / above limit
+				event.setCancelled(true);
+				// TODO send message to player
+				player.sendMessage(ChatColor.RED + AmazoCreative.TAG
+						+ " Hit limit for item!");
+			}
+			else
+			{
+				// increment player value if event is not denied
+				plugin.getConfigHandler().getStorageConfig()
+						.setPlayerLimit(player.getName(), item, ++limit);
+			}
 		}
-		
 	}
 }
