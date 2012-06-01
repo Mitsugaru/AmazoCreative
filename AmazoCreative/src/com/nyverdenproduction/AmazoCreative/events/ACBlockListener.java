@@ -84,13 +84,16 @@ public class ACBlockListener implements Listener
 		 * http ://forums.bukkit.org/threads/check-if-player-is-in-worldguard-
 		 * region -error.73598/
 		 */
-		ApplicableRegionSet regionSet = plugin.getWorldGuard()
-				.getRegionManager(player.getWorld())
-				.getApplicableRegions(player.getLocation());
-		// Check if they're in an existing region. If so, ignore.
-		if (regionSet.size() > 0)
+		final ApplicableRegionSet regionSet = plugin.getWorldGuard()
+				.getRegionManager(event.getBlockPlaced().getWorld())
+				.getApplicableRegions(event.getBlockPlaced().getLocation());
+		// Check if its not in a region
+		if (regionSet.size() <= 0)
 		{
-			return;
+			// Deny
+			event.setCancelled(true);
+			player.sendMessage(ChatColor.RED + AmazoCreative.TAG
+					+ " Cannot build outside of a region.");
 		}
 		// Check if block is in config item list
 		if (!plugin.getConfigHandler().getValuesConfig().items
@@ -103,11 +106,6 @@ public class ACBlockListener implements Listener
 		}
 		else
 		{
-			regionSet = plugin.getWorldGuard()
-					.getRegionManager(event.getBlockPlaced().getWorld())
-					.getApplicableRegions(event.getBlockPlaced().getLocation());
-			if (regionSet.size() > 0)
-			{
 				// Check the player's current limit for the block
 				int limit = plugin.getConfigHandler().getStorageConfig()
 						.getPlayerLimit(player.getName(), item);
@@ -126,14 +124,6 @@ public class ACBlockListener implements Listener
 					plugin.getConfigHandler().getStorageConfig()
 							.setPlayerLimit(player.getName(), item, ++limit);
 				}
-			}
-			else
-			{
-				// Deny
-				event.setCancelled(true);
-				player.sendMessage(ChatColor.RED + AmazoCreative.TAG
-						+ " Must build inside a region.");
-			}
 
 		}
 	}
