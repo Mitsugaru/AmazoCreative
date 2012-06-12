@@ -110,49 +110,44 @@ public class ACBlockListener implements Listener
 		// Check if its not in a region
 		if (regionSet.size() <= 0)
 		{
-			// Deny
-			event.setCancelled(true);
-			player.sendMessage(ChatColor.RED + AmazoCreative.TAG
-					+ " Cannot build outside of a region.");
-			return;
-		}
-		// Check if block is in config item list
-		if (!plugin.getConfigHandler().getValuesConfig().items
-				.containsKey(item))
-		{
-			// Deny
-			event.setCancelled(true);
-			player.sendMessage(ChatColor.RED + AmazoCreative.TAG
-					+ " Must build inside a region.");
-			return;
-		}
-		else
-		{
-			// Check the player's current limit for the block
-			int limit = plugin.getConfigHandler().getStorageConfig()
-					.getPlayerLimit(player.getName(), item);
-			if (limit >= plugin.getConfigHandler().getValuesConfig().items
-					.get(item).limit)
+			// Check if block is in config item list
+			if (!plugin.getConfigHandler().getValuesConfig().items
+					.containsKey(item))
 			{
-				// deny if player is at / above limit
+				// Deny
 				event.setCancelled(true);
-				// send message to player
 				player.sendMessage(ChatColor.RED + AmazoCreative.TAG
-						+ " Hit limit for item!");
-				if (plugin.getConfigHandler().getRootConfig().debugEvents)
-				{
-					plugin.getLogger().info(
-							player.getName() + " hit limit: "
-									+ item.getItemType().name() + " : " + item.getData());
-				}
+						+ " Must build inside a region.");
+				return;
 			}
 			else
 			{
-				// increment player value if event is not denied
-				plugin.getConfigHandler().getStorageConfig()
-						.setPlayerLimit(player.getName(), item, ++limit);
+				// Check the player's current limit for the block
+				int limit = plugin.getConfigHandler().getStorageConfig()
+						.getPlayerLimit(player.getName(), item);
+				if (limit >= plugin.getConfigHandler().getValuesConfig().items
+						.get(item).limit)
+				{
+					// deny if player is at / above limit
+					event.setCancelled(true);
+					// send message to player
+					player.sendMessage(ChatColor.RED + AmazoCreative.TAG
+							+ " Hit limit for item!");
+					if (plugin.getConfigHandler().getRootConfig().debugEvents)
+					{
+						plugin.getLogger().info(
+								player.getName() + " hit limit: "
+										+ item.getItemType().name() + " : "
+										+ item.getData());
+					}
+				}
+				else
+				{
+					// increment player value if event is not denied
+					plugin.getConfigHandler().getStorageConfig()
+							.setPlayerLimit(player.getName(), item, ++limit);
+				}
 			}
-
 		}
 	}
 }
