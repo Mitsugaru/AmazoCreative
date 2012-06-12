@@ -1,6 +1,7 @@
 package com.nyverdenproduction.AmazoCreative.events;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -43,9 +44,18 @@ public class ACBlockListener implements Listener
 		{
 			return;
 		}
+		if (plugin.getConfigHandler().getRootConfig().debugEvents)
+		{
+			plugin.getLogger().info(
+					"valid world: " + player.getWorld().getName());
+		}
 		final ApplicableRegionSet regionSet = plugin.getWorldGuard()
 				.getRegionManager(event.getBlock().getWorld())
 				.getApplicableRegions(event.getBlock().getLocation());
+		if (plugin.getConfigHandler().getRootConfig().debugEvents)
+		{
+			plugin.getLogger().info("regionSet size = " + regionSet.size());
+		}
 		// Check if its not in a region
 		if (regionSet.size() <= 0)
 		{
@@ -79,14 +89,24 @@ public class ACBlockListener implements Listener
 		{
 			return;
 		}
+		if (plugin.getConfigHandler().getRootConfig().debugEvents)
+		{
+			plugin.getLogger().info(
+					"valid world: " + player.getWorld().getName());
+		}
 		/**
 		 * Thanks to rmb938 for the following example on dealing with wg regions
 		 * http ://forums.bukkit.org/threads/check-if-player-is-in-worldguard-
 		 * region -error.73598/
 		 */
+		final Block placed = event.getBlockPlaced();
 		final ApplicableRegionSet regionSet = plugin.getWorldGuard()
-				.getRegionManager(event.getBlockPlaced().getWorld())
-				.getApplicableRegions(event.getBlockPlaced().getLocation());
+				.getRegionManager(placed.getWorld())
+				.getApplicableRegions(placed.getLocation());
+		if (plugin.getConfigHandler().getRootConfig().debugEvents)
+		{
+			plugin.getLogger().info("regionSet size = " + regionSet.size());
+		}
 		// Check if its not in a region
 		if (regionSet.size() <= 0)
 		{
@@ -94,6 +114,7 @@ public class ACBlockListener implements Listener
 			event.setCancelled(true);
 			player.sendMessage(ChatColor.RED + AmazoCreative.TAG
 					+ " Cannot build outside of a region.");
+			return;
 		}
 		// Check if block is in config item list
 		if (!plugin.getConfigHandler().getValuesConfig().items
@@ -103,27 +124,34 @@ public class ACBlockListener implements Listener
 			event.setCancelled(true);
 			player.sendMessage(ChatColor.RED + AmazoCreative.TAG
 					+ " Must build inside a region.");
+			return;
 		}
 		else
 		{
-				// Check the player's current limit for the block
-				int limit = plugin.getConfigHandler().getStorageConfig()
-						.getPlayerLimit(player.getName(), item);
-				if (limit >= plugin.getConfigHandler().getValuesConfig().items
-						.get(item).limit)
+			// Check the player's current limit for the block
+			int limit = plugin.getConfigHandler().getStorageConfig()
+					.getPlayerLimit(player.getName(), item);
+			if (limit >= plugin.getConfigHandler().getValuesConfig().items
+					.get(item).limit)
+			{
+				// deny if player is at / above limit
+				event.setCancelled(true);
+				// send message to player
+				player.sendMessage(ChatColor.RED + AmazoCreative.TAG
+						+ " Hit limit for item!");
+				if (plugin.getConfigHandler().getRootConfig().debugEvents)
 				{
-					// deny if player is at / above limit
-					event.setCancelled(true);
-					// send message to player
-					player.sendMessage(ChatColor.RED + AmazoCreative.TAG
-							+ " Hit limit for item!");
+					plugin.getLogger().info(
+							player.getName() + " hit limit: "
+									+ item.getItemType().name() + " : " + item.getData());
 				}
-				else
-				{
-					// increment player value if event is not denied
-					plugin.getConfigHandler().getStorageConfig()
-							.setPlayerLimit(player.getName(), item, ++limit);
-				}
+			}
+			else
+			{
+				// increment player value if event is not denied
+				plugin.getConfigHandler().getStorageConfig()
+						.setPlayerLimit(player.getName(), item, ++limit);
+			}
 
 		}
 	}

@@ -15,7 +15,7 @@ public class RootConfig
 	private AmazoCreative plugin;
 	public List<String> worlds;
 	public int defaultLimit;
-	public boolean debugTime;
+	public boolean debugTime, debugEvents;
 
 	public RootConfig(AmazoCreative plugin)
 	{
@@ -27,6 +27,7 @@ public class RootConfig
 		defaults.put("worlds", new ArrayList<String>());
 		defaults.put("defaults.limit", 5);
 		defaults.put("debug.time", false);
+		defaults.put("debug.events", false);
 		defaults.put("version", plugin.getDescription().getVersion());
 		// Insert defaults into config file if they're not present
 		for (final Entry<String, Object> e : defaults.entrySet())
@@ -59,6 +60,7 @@ public class RootConfig
 		worlds = config.getStringList("worlds");
 		defaultLimit = config.getInt("defaults.limit", 5);
 		debugTime = config.getBoolean("debug.time", false);
+		debugEvents = config.getBoolean("debug.events", false);
 	}
 	
 	private void boundsCheck()

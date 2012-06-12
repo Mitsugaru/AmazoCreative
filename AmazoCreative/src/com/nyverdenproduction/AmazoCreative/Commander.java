@@ -50,10 +50,16 @@ public class Commander implements CommandExecutor
 			}
 			else if (com.equals("reload"))
 			{
-				if (perm.checkPermission(sender, PermissionNode.ADMIN_RELOAD))
+				if (!perm.checkPermission(sender, PermissionNode.ADMIN_RELOAD))
 				{
-					plugin.getConfigHandler().reload();
+					sender.sendMessage(ChatColor.RED + AmazoCreative.TAG
+							+ " Lack permission: "
+							+ PermissionNode.ADMIN_RELOAD);
+					return true;
 				}
+				plugin.getConfigHandler().reload();
+				sender.sendMessage(ChatColor.GREEN + AmazoCreative.TAG
+						+ " Reloaded config");
 				return true;
 			}
 			else if (com.equals("reset"))
@@ -81,8 +87,9 @@ public class Commander implements CommandExecutor
 			try
 			{
 				final String playerName = args[1];
-				//TODO reset player limits
-				plugin.getConfigHandler().getStorageConfig().resetPlayer(playerName);
+				// TODO reset player limits
+				plugin.getConfigHandler().getStorageConfig()
+						.resetPlayer(playerName);
 				sender.sendMessage(ChatColor.GREEN + AmazoCreative.TAG
 						+ " Player '" + ChatColor.GOLD + playerName
 						+ ChatColor.GREEN + "' limits reset.");
@@ -128,14 +135,19 @@ public class Commander implements CommandExecutor
 				+ "AmazoCreative" + ChatColor.GREEN + "==========");
 		if (perm.checkPermission(sender, PermissionNode.ADMIN_RESET))
 		{
-			sender.sendMessage(ChatColor.BLUE + "/ac reset" + ChatColor.LIGHT_PURPLE + " [player]" + ChatColor.WHITE + " : Reloads configs");
+			sender.sendMessage(ChatColor.BLUE + "/ac reset"
+					+ ChatColor.LIGHT_PURPLE + " [player]" + ChatColor.WHITE
+					+ " : Reloads configs");
 		}
 		if (perm.checkPermission(sender, PermissionNode.ADMIN_RELOAD))
 		{
-			sender.sendMessage(ChatColor.BLUE + "/ac reload" + ChatColor.WHITE + " : Reloads configs");
+			sender.sendMessage(ChatColor.BLUE + "/ac reload" + ChatColor.WHITE
+					+ " : Reloads configs");
 		}
-		sender.sendMessage(ChatColor.BLUE + "/ac help" + ChatColor.WHITE + " : Show help menu");
-		sender.sendMessage(ChatColor.BLUE + "/ac version" + ChatColor.WHITE + " : Show version and about");
+		sender.sendMessage(ChatColor.BLUE + "/ac help" + ChatColor.WHITE
+				+ " : Show help menu");
+		sender.sendMessage(ChatColor.BLUE + "/ac version" + ChatColor.WHITE
+				+ " : Show version and about");
 		return true;
 	}
 
